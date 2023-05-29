@@ -21,5 +21,7 @@ class ChessWebScrapper:
     
     def get_current_position(self):
         moves = self.driver.find_elements(By.CLASS_NAME, "move")
-        moves = list(map(lambda move: move.text.split("\n"), moves))
+
+        #Remove the first element, which is move number
+        moves = list(map(lambda move: move.text.split("\n")[1:], moves))
         return moves
