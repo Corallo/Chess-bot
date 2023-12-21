@@ -33,9 +33,13 @@ class ChessWebHandler:
         ac = ActionChains(self.driver)
         square_from = str(ord(move[0]) - 96) + move[1]
         square_to = str(ord(move[2]) - 96) + move[3]
-        element =self.driver.find_element(By.CLASS_NAME, "square-"+square_from)
-        ac.move_to_element(element).move_by_offset(0, 0).click().perform()
-        element =self.driver.find_element(By.CLASS_NAME, "square-"+square_to)
-        ac.move_to_element(element).move_by_offset(0, 0).click().perform()
-
+        try:
+            element = self.driver.find_element(By.CLASS_NAME, "square-"+square_from)
+            ac.move_to_element(element).move_by_offset(0, 0).click().perform()
+            element = self.driver.find_element(By.CLASS_NAME, "square-"+square_to)
+            ac.move_to_element(element).move_by_offset(0, 0).click().perform()
+        except:
+            print("Failed to make move, trying again")
+            time.sleep(1)
+            self.make_move(move)
 

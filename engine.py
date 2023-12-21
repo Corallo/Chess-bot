@@ -38,16 +38,16 @@ class chessEngine:
     def __init__(self):
         self.evaluator = ChessEvaluator()
         self.bh = ChessBoardHandler()
+
     def search_best_move(self, moves_str, depth=3):
 
         self.bh.update_board(moves_str)
-
         best_move = None
         best_score = -1000
         #_minimax.cache_clear()
         for move in self.bh.get_legal_moves():
             self.bh.make_move(move)
-            score = self._minimax(self.bh.move_str, depth-1, False)
+            score = self._alpha_beta(self.bh.move_str, depth-1, -1000, 1000, False)
             self.bh.undo_move()
             if score > best_score:
                 best_move = move
@@ -74,4 +74,32 @@ class chessEngine:
                 score = self._minimax(self.bh.move_str, depth-1, True)
                 self.bh.undo_move()
                 best_score = min(score, best_score)
+            return best_score
+
+    @lru_cache(maxsize=1000000)
+    def _alpha_beta(self, move_str, depth, alpha, beta, is_maximizing):
+        self.bh.update_board(move_str)
+        if depth == 0:
+            return self.evaluator.evaluate_board(move_str)
+        if is_maximizing:
+            best_score = -1000
+            for move in self.bh.get_legal_moves():
+                self.bh.make_move(move)
+                score = self._alpha_beta(self.bh.move_str, depth-1, alpha, beta, False)
+                self.bh.undo_move()
+                best_score = max(score, best_score)
+                alpha = max(alpha, score)
+                if beta <= alpha:
+                    break
+            return best_score
+        else:
+            best_score = 1000
+            for move in self.bh.get_legal_moves():
+                self.bh.make_move(move)
+                score = self._alpha_beta(self.bh.move_str, depth-1, alpha, beta, True)
+                self.bh.undo_move()
+                best_score = min(score, best_score)
+                beta = min(beta, score)
+                if beta <= alpha:
+                    break
             return best_score

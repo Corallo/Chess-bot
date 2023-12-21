@@ -10,11 +10,11 @@ This repo contains my bot that plays chess on chesss.com
 - [x] Parser to parse the chesboard to pychess (use move list)
 - [x] Dummy engine
 - [x] Extend web scarper with make_move function
-- [ ] Add checkmate to eval function
-- [ ] Add draw to eval function
+- [x] Add checkmate to eval function
+- [X] Add draw to eval function
+- [x] Implement alpha beta
 - [ ] Create automatic test as GitHub action to check if commit improve against last version of engine
-- [ ] Implement proper caching
-- [ ] Implement alpha beta
+- [ ] Verify caching is actually working.
 - [ ] Implement Iterative deepening
 - [ ] Implement heuristic to decide how much time to spend
 - [ ] Implement piece positional value
@@ -25,7 +25,8 @@ This repo contains my bot that plays chess on chesss.com
 
 - [ ] Fix parser bug causing crash when game end
 - [ ] Fix attempt to login without entering password
-- [ ] Catch exception when failing to move, and just make it try again
+- [x] Catch exception when failing to move, and just make it try again
+- [ ] Draw detection doesn't seem to work properly
 
 
 ## Notes for myself in the future
