@@ -8,8 +8,8 @@ class ChessEvaluator:
         self.bh = ChessBoardHandler()
 
     @lru_cache(maxsize=1000000)
-    def evaluate_board(self, move_list: tuple) -> int:
-        self.bh.update_board(move_list)
+    def evaluate_board(self, move_str: str) -> int:
+        self.bh.update_board(move_str)
         board = self.bh.get_board()
         #return if checkmate
         if board.is_checkmate():
@@ -38,14 +38,16 @@ class chessEngine:
     def __init__(self):
         self.evaluator = ChessEvaluator()
         self.bh = ChessBoardHandler()
-    def search_best_move(self, move_list, depth=3):
-        self.bh.update_board(move_list)
+    def search_best_move(self, moves_str, depth=3):
+
+        self.bh.update_board(moves_str)
+
         best_move = None
         best_score = -1000
         #_minimax.cache_clear()
         for move in self.bh.get_legal_moves():
             self.bh.make_move(move)
-            score = self._minimax(self.bh.move_list, depth-1, False)
+            score = self._minimax(self.bh.move_str, depth-1, False)
             self.bh.undo_move()
             if score > best_score:
                 best_move = move
@@ -53,15 +55,15 @@ class chessEngine:
         return best_move, best_score
 
     @lru_cache(maxsize=1000000)
-    def _minimax(self, move_list, depth, is_maximizing):
-        self.bh.update_board(move_list)
+    def _minimax(self, move_str, depth, is_maximizing):
+        self.bh.update_board(move_str)
         if depth == 0:
-            return self.evaluator.evaluate_board(move_list)
+            return self.evaluator.evaluate_board(move_str)
         if is_maximizing:
             best_score = -1000
             for move in self.bh.get_legal_moves():
                 self.bh.make_move(move)
-                score = self._minimax(self.bh.move_list, depth-1, False)
+                score = self._minimax(self.bh.move_str, depth-1, False)
                 self.bh.undo_move()
                 best_score = max(score, best_score)
             return best_score
@@ -69,7 +71,7 @@ class chessEngine:
             best_score = 1000
             for move in self.bh.get_legal_moves():
                 self.bh.make_move(move)
-                score = self._minimax(self.bh.move_list, depth-1, True)
+                score = self._minimax(self.bh.move_str, depth-1, True)
                 self.bh.undo_move()
                 best_score = min(score, best_score)
             return best_score

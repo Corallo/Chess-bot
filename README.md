@@ -10,7 +10,6 @@ This repo contains my bot that plays chess on chesss.com
 - [x] Parser to parse the chesboard to pychess (use move list)
 - [x] Dummy engine
 - [x] Extend web scarper with make_move function
-- [ ] Speed up processing by using native san format
 - [ ] Add checkmate to eval function
 - [ ] Add draw to eval function
 - [ ] Create automatic test as GitHub action to check if commit improve against last version of engine
@@ -19,6 +18,7 @@ This repo contains my bot that plays chess on chesss.com
 - [ ] Implement Iterative deepening
 - [ ] Implement heuristic to decide how much time to spend
 - [ ] Implement piece positional value
+- [ ] Speed up board handling
 - [ ] ...
 
 ### Bugfixes
