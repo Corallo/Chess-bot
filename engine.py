@@ -39,17 +39,17 @@ class chessEngine:
         self.evaluator = ChessEvaluator()
         self.bh = ChessBoardHandler()
 
-    def search_best_move(self, moves_str, depth=3):
+    def search_best_move(self, moves_str, depth=3, is_maximizing=True):
 
         self.bh.update_board(moves_str)
         best_move = None
-        best_score = -1000
+        best_score = float('-inf') if is_maximizing else float('inf')
         #_minimax.cache_clear()
         for move in self.bh.get_legal_moves():
             self.bh.make_move(move)
-            score = self._alpha_beta(self.bh.move_str, depth-1, -1000, 1000, False)
+            score = self._alpha_beta(self.bh.move_str, depth-1, -1000, 1000, not is_maximizing)
             self.bh.undo_move()
-            if score > best_score:
+            if (is_maximizing and score > best_score) or (not is_maximizing and score < best_score):
                 best_move = move
                 best_score = score
         return best_move, best_score
