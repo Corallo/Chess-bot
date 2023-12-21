@@ -21,12 +21,22 @@ class ChessWebHandler:
         self.driver.find_element(By.ID, "login").click()
 
     def get_current_position(self):
+        def is_float(value):
+            try:
+                _ = float(value)
+                return True
+            except ValueError:
+                return False
+
         moves = self.driver.find_elements(By.CLASS_NAME, "move")
 
         #Remove the first element, which is move number
         moves = list(map(lambda move: move.text.split("\n")[1:], moves))
         #Convert list of lists into list
         moves = [item for sublist in moves for item in sublist]
+        #remove elements if it contains only numbers
+        moves = [element for element in moves if not is_float(element)]
+
         return moves
 
     def make_move(self, move):
@@ -43,3 +53,6 @@ class ChessWebHandler:
             time.sleep(1)
             self.make_move(move)
 
+    def get_color(self):
+        elements = self.driver.find_elements(By.CSS_SELECTOR, '.board.flipped')
+        return "white" if len(elements) == 0 else "black"
