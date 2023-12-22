@@ -1,6 +1,7 @@
-# Chess-bot
+# Corallotto Chess Bot
 
-This repo contains my bot that plays chess on chesss.com
+Corallotto is my simple chess bot that plays on chess.com
+At the moment he reached an Elo of 811
 
 ## To Do
 
