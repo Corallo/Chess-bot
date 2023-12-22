@@ -36,7 +36,7 @@ class ChessWebHandler:
         moves = [item for sublist in moves for item in sublist]
         #remove elements if it contains only numbers
         moves = [element for element in moves if not is_float(element)]
-
+        moves = [element for element in moves if not ":" in element]
         return moves
 
     def make_move(self, move):
