@@ -17,7 +17,7 @@ This repo contains my bot that plays chess on chesss.com
 - [ ] Verify caching is actually working.
 - [ ] Implement Iterative deepening
 - [ ] Implement heuristic to decide how much time to spend
-- [ ] Implement piece positional value
+- [x] Implement piece positional value
 - [ ] Speed up board handling
 - [ ] ...
 
@@ -26,7 +26,7 @@ This repo contains my bot that plays chess on chesss.com
 - [ ] Fix parser bug causing crash when game end
 - [ ] Fix attempt to login without entering password
 - [x] Catch exception when failing to move, and just make it try again
-- [ ] Draw detection doesn't seem to work properly
+- [x] Draw detection doesn't seem to work properly
 - [x] Fix bug that was making black lose intentionally
 
 ## Notes for myself in the future
