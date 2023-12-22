@@ -29,3 +29,10 @@ class ChessBoardHandler:
         board = self.get_board()
         return board.turn == self.my_color
 
+    def check_draw(self):
+        board = self.get_board()
+        return board.is_variant_draw()
+    def check_mate(self):
+        board = self.get_board()
+        return board.is_checkmate()
+
