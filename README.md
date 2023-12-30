@@ -29,6 +29,7 @@ At the moment he reached an Elo of 811
 - [x] Catch exception when failing to move, and just make it try again
 - [x] Draw detection doesn't seem to work properly
 - [x] Fix bug that was making black lose intentionally
+- [ ] Fix crash when engine return -inf for checkmate
 
 ## Notes for myself in the future
 

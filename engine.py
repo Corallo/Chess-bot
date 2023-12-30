@@ -112,7 +112,7 @@ class chessEngine:
             else:
                 score = self._alpha_beta(self.bh.move_str, depth-1, float('-inf'), float('inf'), not is_maximizing)
             self.bh.undo_move()
-            if (is_maximizing and score > best_score) or (not is_maximizing and score < best_score):
+            if (is_maximizing and score >= best_score) or (not is_maximizing and score <= best_score):
                 best_move = move
                 best_score = score
         return best_move, best_score
