@@ -43,6 +43,7 @@ class ChessWebHandler:
         ac = ActionChains(self.driver)
         square_from = str(ord(move[0]) - 96) + move[1]
         square_to = str(ord(move[2]) - 96) + move[3]
+        failures = 0
         try:
             element = self.driver.find_element(By.CLASS_NAME, "square-"+square_from)
             ac.move_to_element(element).move_by_offset(0, 0).click().perform()
@@ -56,7 +57,11 @@ class ChessWebHandler:
         except:
             print("Failed to make move, trying again")
             time.sleep(1)
-            self.make_move(move)
+            failures+=1
+            if failures < 5:
+                self.make_move(move,color)
+            else:
+                print("Failed too many time, aborting move")
 
     def get_color(self):
         elements = self.driver.find_elements(By.CSS_SELECTOR, '.board.flipped')

@@ -51,3 +51,11 @@ board = game.get_board()
 move, score = engine.search_best_move(board, is_maximizing="black"=="white")
 print(move, score)
 assert str(move) == "b8b5"
+
+
+move_str = "Nc3 d5 d4 Nf6 Bg5 c6 Nf3 Bf5 Nh4 g6 Nxf5 gxf5 Qd3 e6 f4 Be7 Rb1 O-O a4 Ng4 Bxe7 Qxe7 Qg3 Qb4 h3 Qxd4 hxg4 fxg4 Qxg4+ Kh8 Rd1 Qg7 Qh4 Nd7 e4 Rfd8 exd5 exd5 Kf2 Nf6 Kg1 Ng4 Be2 Ne3"
+game.update_board(move_str)
+board = game.get_board()
+move, score = engine.search_best_move(board, is_maximizing=True)
+print(move, score)
+assert str(move) != "d1d2"
