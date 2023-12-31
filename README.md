@@ -14,11 +14,13 @@ At the moment he reached an Elo of 811
 - [x] Add checkmate to eval function
 - [X] Add draw to eval function
 - [x] Implement alpha beta
+- [x] Implement piece positional value
+- [x] Simplify engine code
+- [x] Implement promotion
 - [ ] Create automatic test as GitHub action to check if commit improve against last version of engine
-- [ ] Verify caching is actually working.
+- [ ] Implement caching
 - [ ] Implement Iterative deepening
 - [ ] Implement heuristic to decide how much time to spend
-- [x] Implement piece positional value
 - [ ] Speed up board handling
 - [ ] ...
 
@@ -27,8 +29,10 @@ At the moment he reached an Elo of 811
 - [ ] Fix parser bug causing crash when game end
 - [ ] Fix attempt to login without entering password
 - [x] Catch exception when failing to move, and just make it try again
-- [x] Draw detection doesn't seem to work properly
 - [x] Fix bug that was making black lose intentionally
+- [x] Draw detection doesn't seem to work properly
+- [x] Stalemate not detected as draw
+- [x] Fix positional score bug for black
 - [ ] Fix crash when engine return -inf for checkmate
 
 ## Notes for myself in the future
