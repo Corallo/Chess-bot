@@ -110,6 +110,7 @@ class chessEngine:
     def __init__(self):
         self.evaluator = ChessEvaluator()
         self.bh = ChessBoardHandler()
+        self.MAX_EXTRA_MOVES = 3 # Max extra move to do deeper during search in case of capture
 
     def search_best_move(self, chessboard, depth=3, is_maximizing=True):
         best_move = None
@@ -128,14 +129,19 @@ class chessEngine:
                 best_score = score
         return best_move, best_score
 
-    def _alpha_beta(self, chessboard, depth, alpha, beta, is_maximizing):
-        if depth == 0:
+    def _alpha_beta(self, chessboard, depth, alpha, beta, is_maximizing, last_move_was_capture=False):
+        if is_variant_draw(chessboard):
+            return 0
+        if chessboard.is_checkmate():
+            return float('inf') if is_maximizing else float('-inf')
+        if depth <= -self.MAX_EXTRA_MOVES * (1 if last_move_was_capture or chessboard.is_check() else 0):
             return self.evaluator.evaluate_board(chessboard)
         if is_maximizing:
             best_score = float('-inf')
             for move in chessboard.legal_moves:
+                last_move_was_capture = chessboard.is_capture(move)
                 chessboard.push(move)
-                score = self._alpha_beta(chessboard, depth-1, alpha, beta, False)
+                score = self._alpha_beta(chessboard, depth-1, alpha, beta, False, last_move_was_capture)
                 chessboard.pop()
                 best_score = max(score, best_score)
                 alpha = max(alpha, score)
@@ -145,8 +151,9 @@ class chessEngine:
         else:
             best_score = float('inf')
             for move in chessboard.legal_moves:
+                last_move_was_capture = chessboard.is_capture(move)
                 chessboard.push(move)
-                score = self._alpha_beta(chessboard, depth-1, alpha, beta, True)
+                score = self._alpha_beta(chessboard, depth-1, alpha, beta, True, last_move_was_capture)
                 chessboard.pop()
                 best_score = min(score, best_score)
                 beta = min(beta, score)

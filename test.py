@@ -43,3 +43,11 @@ game.update_board(move_str)
 board = game.get_board()
 move = engine.search_best_move(board)
 print(move)
+
+
+move_str = "e4 Nc6 d4 Nf6 e5 Ne4 d5 Nxe5 a4 f5 Qd4 Ng4 Nh3 Kf7 Ng5+ Nxg5 Bxg5 h6 Bd2 Kg8 Bc4 Kh7 a5 d6 Be2 Ne5 b4 Bd7 b5 h5 Qh4 g6 Rg1 Bg7 Qg5 Nf7 Qf4 Bxa1 Qc4 Be5 h4 Bh2 Rf1 Ne5 Qb3 Rb8 Rh1 Bxb5 Qxb5 a6 Qb3 e6 Rxh2 exd5 Qxd5 c6 Qd4 c5 Qf4 Nc6 Qh6+ Kg8 Qxg6+ Kf8 Qxf5+ Kg7 Qg5+ Qxg5 hxg5 Nd4 Bxa6 bxa6 Na3 d5 g6 Kxg6 Rh3 c4 Bf4 Rb2 Bg3 Nxc2+ Nxc2 Rxc2 Bd6 Re8+ Kd1 Rxf2 Bc5 Rxg2 Ba7 Ra2 Bb6 Ra1+ Kd2 Re4 Kc3 Ra3+ Kb2 Rxh3 Kc1 Rh1+ Kd2 Ra1 Ba7 Rxa5 Kc3 Ra3+ Kb2 Rb3+ Kc2 Re2+ Kc1 Re1+ Kd2 Reb1 Bg1 Rxg1 Ke2 Rgb1 Kf2 R3b2+ Ke3 Rf1 Kd4 Rf5 Kc5 h4 Kc6 Rh5 Kc5 h3 Kc6 h2 Kd6 h1=Q Ke6 Qe4+ Kd7 Rb8 Kd6 Kh7 Kc7 Qf4+ Kc6 Rh6+ Kxd5"
+game.update_board(move_str)
+board = game.get_board()
+move, score = engine.search_best_move(board, is_maximizing="black"=="white")
+print(move, score)
+assert str(move) == "b8b5"
