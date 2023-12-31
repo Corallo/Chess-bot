@@ -39,7 +39,7 @@ class ChessWebHandler:
         moves = [element for element in moves if not ":" in element]
         return moves
 
-    def make_move(self, move):
+    def make_move(self, move, color):
         ac = ActionChains(self.driver)
         square_from = str(ord(move[0]) - 96) + move[1]
         square_to = str(ord(move[2]) - 96) + move[3]
@@ -48,6 +48,11 @@ class ChessWebHandler:
             ac.move_to_element(element).move_by_offset(0, 0).click().perform()
             element = self.driver.find_element(By.CLASS_NAME, "square-"+square_to)
             ac.move_to_element(element).move_by_offset(0, 0).click().perform()
+            if len(move) == 5 and move[4]!='+':
+                print("Promotion!")
+                time.sleep(1)
+                element = self.driver.find_element(By.CLASS_NAME, "promotion-piece."+color[0]+move[4])
+                ac.move_to_element(element).move_by_offset(0, 0).click().perform()
         except:
             print("Failed to make move, trying again")
             time.sleep(1)
