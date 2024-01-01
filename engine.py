@@ -89,16 +89,20 @@ class ChessEvaluator:
             self.piece_tables_white[piece_type] = (np.flipud(piece_table) + self.piece_values[piece_type]).reshape(1,-1)[0]
             self.piece_tables_black[piece_type] = (piece_table + self.piece_values[piece_type]).reshape(1,-1)[0]
         print(self.piece_tables_white[chess.PAWN])
+        self.board =  chess.Board()
 
-    def evaluate_board(self, board) -> int:
-        if is_variant_draw(board):
+    @cache
+    def evaluate_board(self, board_epd) -> int:
+
+        self.board.set_epd(board_epd)
+        if is_variant_draw(self.board):
             return 0
-        if board.is_checkmate():
-            return 10e6 if board.turn else -10e6
+        if self.board.is_checkmate():
+            return 10e6 if self.board.turn else -10e6
         score = 0
         for piece_type in self.piece_values.keys():
-            score += sum(self.piece_tables_white[piece_type][list(board.pieces(piece_type, chess.WHITE))]) \
-                  - sum(self.piece_tables_black[piece_type][list(board.pieces(piece_type, chess.BLACK))])
+            score += sum(self.piece_tables_white[piece_type][list(self.board.pieces(piece_type, chess.WHITE))]) \
+                  - sum(self.piece_tables_black[piece_type][list(self.board.pieces(piece_type, chess.BLACK))])
         return score
 
 
@@ -129,7 +133,9 @@ class chessEngine:
 
     def _alpha_beta(self, chessboard, depth, alpha, beta, is_maximizing, last_move_was_capture=False):
         if depth <= -self.MAX_EXTRA_MOVES * (1 if last_move_was_capture or chessboard.is_check() else 0):
-            return self.evaluator.evaluate_board(chessboard)
+            # send board as EPD
+            board_epd = chessboard.epd()
+            return self.evaluator.evaluate_board(board_epd)
         if is_maximizing:
             best_score = float('-inf')
             for move in chessboard.legal_moves:
