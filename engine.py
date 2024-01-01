@@ -1,18 +1,14 @@
 import chess
-from functools import lru_cache
+from functools import cache
 from game_handler import ChessBoardHandler
 import numpy as np
 
+
 def is_variant_draw(board):
-    if board.is_variant_draw():
-        return True
-    if board.is_repetition():
-        return True
-    if board.is_stalemate():
-        return True
-    if board.is_insufficient_material():
-        return True
-    return False
+    return board.is_repetition() or board.is_stalemate() or board.is_insufficient_material()
+
+
+
 class ChessEvaluator:
 
     def __init__(self):
@@ -79,14 +75,7 @@ class ChessEvaluator:
                 20, 30, 10, 0, 0, 10, 30, 20
             ]).reshape(8, 8),
         }
-
-    def evaluate_board(self, board) -> int:
-        if board.is_checkmate():
-            return 10e6 if board.turn else -10e6
-        #return if draw
-        if is_variant_draw(board):
-            return 0
-        piece_values = {
+        self.piece_values = {
             chess.PAWN: 100,
             chess.KNIGHT: 320,
             chess.BISHOP: 330,
@@ -94,15 +83,22 @@ class ChessEvaluator:
             chess.QUEEN: 900,
             chess.KING: 20000
         }
+        self.piece_tables_white = {}
+        self.piece_tables_black = {}
+        for piece_type, piece_table in self.piece_tables.items():
+            self.piece_tables_white[piece_type] = (np.flipud(piece_table) + self.piece_values[piece_type]).reshape(1,-1)[0]
+            self.piece_tables_black[piece_type] = (piece_table + self.piece_values[piece_type]).reshape(1,-1)[0]
+        print(self.piece_tables_white[chess.PAWN])
+
+    def evaluate_board(self, board) -> int:
+        if is_variant_draw(board):
+            return 0
+        if board.is_checkmate():
+            return 10e6 if board.turn else -10e6
         score = 0
-        for square in chess.SQUARES:
-            piece = board.piece_at(square)
-            if piece is not None:
-                color = 1 if piece.color else -1
-                tmp_table = self.piece_tables[piece.piece_type]
-                if color == 0: #black
-                    tmp_table = np.flipud(tmp_table)
-                score += (piece_values[piece.piece_type] + tmp_table[square % 8][square // 8]) * color
+        for piece_type in self.piece_values.keys():
+            score += sum(self.piece_tables_white[piece_type][list(board.pieces(piece_type, chess.WHITE))]) \
+                  - sum(self.piece_tables_black[piece_type][list(board.pieces(piece_type, chess.BLACK))])
         return score
 
 
@@ -110,7 +106,7 @@ class chessEngine:
     def __init__(self):
         self.evaluator = ChessEvaluator()
         self.bh = ChessBoardHandler()
-        self.MAX_EXTRA_MOVES = 2 # Max extra move to do deeper during search in case of capture
+        self.MAX_EXTRA_MOVES = 2  # Max extra move to do deeper during search in case of capture
 
     def search_best_move(self, chessboard, depth=3, is_maximizing=True):
         best_move = None
@@ -120,9 +116,11 @@ class chessEngine:
             if is_variant_draw(chessboard):
                 score = 0
             elif chessboard.is_checkmate():
-                score = (10e6)+1 if is_maximizing else (-10e6) -1 # Checkmate in 1 is better than checkmate in n
+                # Checkmate in 1 is better than checkmate in n
+                score = (10e6)+1 if is_maximizing else (-10e6) - 1
             else:
-                score = self._alpha_beta(chessboard, depth-1, float('-inf'), float('inf'), not is_maximizing)
+                score = self._alpha_beta(
+                    chessboard, depth-1, float('-inf'), float('inf'), not is_maximizing)
             chessboard.pop()
             if (is_maximizing and score >= best_score) or (not is_maximizing and score <= best_score):
                 best_move = move
@@ -142,7 +140,8 @@ class chessEngine:
                 elif chessboard.is_checkmate():
                     score = 10e6
                 else:
-                    score = self._alpha_beta(chessboard, depth-1, alpha, beta, False, last_move_was_capture)
+                    score = self._alpha_beta(
+                        chessboard, depth-1, alpha, beta, False, last_move_was_capture)
                 chessboard.pop()
                 best_score = max(score, best_score)
                 alpha = max(alpha, score)
@@ -159,7 +158,8 @@ class chessEngine:
                 elif chessboard.is_checkmate():
                     score = -10e6
                 else:
-                    score = self._alpha_beta(chessboard, depth-1, alpha, beta, True, last_move_was_capture)
+                    score = self._alpha_beta(
+                        chessboard, depth-1, alpha, beta, True, last_move_was_capture)
                 chessboard.pop()
                 best_score = min(score, best_score)
                 beta = min(beta, score)

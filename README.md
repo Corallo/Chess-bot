@@ -17,6 +17,8 @@ At the moment he reached an Elo of 811
 - [x] Implement piece positional value
 - [x] Simplify engine code
 - [x] Implement promotion
+- [x] Add extra depth if last move is capture
+- [ ] Implement adaptive depth
 - [ ] Create automatic test as GitHub action to check if commit improve against last version of engine
 - [ ] Implement caching
 - [ ] Implement Iterative deepening
